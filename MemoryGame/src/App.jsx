@@ -4,6 +4,8 @@ function App() {
   const [board, setBoard] = useState(Array(6).fill(false));
   console.log(board);
 
+  // To do: Time to now show the condition when the box is clicked, it changes to colour, and it reverts back when clicked again
+
   function handleClick(id) {
     setBoard((prev) => {
       const copy = [...prev];
