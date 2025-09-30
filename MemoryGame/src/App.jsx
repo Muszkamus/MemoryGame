@@ -1,32 +1,48 @@
-import { useState } from "react";
+import { useReducer } from "react";
+import { items } from "././Reducer/items";
 
 function App() {
-  const [board, setBoard] = useState(Array(6).fill(false));
-  console.log(board);
+  const initialState = {
+    cards: items,
+    selected: [],
+    moves: 0,
+  };
 
-  // To do: Time to now show the condition when the box is clicked, it changes to colour, and it reverts back when clicked again
+  function reducer(state, action) {
+    switch (action.type) {
+      case "FLIPCARD":
+        return {
+          ...state,
+
+          cards: state.cards.map((card) =>
+            card.id === action.payload
+              ? { ...card, isFlipped: !card.isFlipped }
+              : card
+          ),
+          moves: state.moves + 1,
+        };
+
+      default:
+        throw new Error("ERROR");
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+  console.log(state);
 
   function handleClick(id) {
-    setBoard((prev) => {
-      const copy = [...prev];
-      if (copy[id] === false) {
-        copy[id] = true;
-        return copy;
-      }
-      copy[id] = false;
-      return copy;
-    });
+    dispatch({ type: "FLIPCARD", payload: id });
   }
+
   return (
     <div>
       <GameBoard>
-        {board.map((el, index) => (
+        {state.cards.map((el) => (
           <Square
-            key={index}
-            value={board[index]}
+            key={el.id}
+            id={el.id}
             handleClick={handleClick}
-            id={index}
-            board={board}
+            symbol={el.isFlipped ? el.symbol : <p>?</p>}
           />
         ))}
       </GameBoard>
@@ -37,20 +53,20 @@ function App() {
 function GameBoard({ children }) {
   return (
     <div className="flex justify-center">
-      <div className="grid grid-cols-3 grid-row-3 mt-20 w-100 h-65">
+      <div className="grid grid-cols-3 grid-row-3 mt-20 w-100 h-70">
         {children}
       </div>
     </div>
   );
 }
 
-function Square({ handleClick, board, id }) {
+function Square({ handleClick, id, symbol }) {
   return (
     <button
       onClick={() => handleClick(id)}
       className="border text-2xl font-black"
     >
-      {board[id]}
+      {symbol}
     </button>
   );
 }
