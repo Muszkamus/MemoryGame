@@ -1,4 +1,9 @@
 function StartMenu({ setName }) {
+  /*
+# Form handling (StartMenu)
+e.target[0].value is brittle. A senior would suggest controlled input (local state) instead.
+PR comment: “Use a controlled component to avoid hidden assumptions.”
+  */
   function handleChange(e) {
     e.preventDefault();
     setName(e.target[0].value);

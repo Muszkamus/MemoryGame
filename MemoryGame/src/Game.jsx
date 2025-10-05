@@ -1,5 +1,12 @@
 function Game({ state, dispatch, name }) {
   function handleClick(id) {
+    /*
+## Game logic coupling
+Right now, Game mixes UI rendering with match-check logic (handleClick has both concerns).
+A senior might push you to move match detection into the reducer, so the reducer owns all game logic.
+Example: instead of setTimeout in the component, dispatch an action like CHECK_MATCH and let reducer handle outcomes.
+*/
+
     // Prevent clicking same card twice
     if (state.selected.some((sel) => sel.id === id)) return;
 
@@ -47,7 +54,9 @@ function Game({ state, dispatch, name }) {
 }
 
 function Scoreboard() {
-  // This will show up when the game is won, fetch data from local storage, with the button to submit score with name
+  // TODO
+  // This will show up when the game is won, fetch data from local storage, with the button to submit score with name to localStorage.
+  // There will be button to remove the scores to clean up.
   return <div></div>;
 }
 

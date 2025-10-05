@@ -1,4 +1,10 @@
 const items = [
+  // Change is Matching to PairID
+
+  // ## Data shape assumptions
+  // if (newSelection[0].id === newSelection[1].isMatching) assumes a specific data model (isMatching).
+  // Senior would want either validation of items or a clearer definition of items schema (symbol, pairId, etc.).
+
   {
     id: 0,
     symbol: "🍕",

@@ -1,5 +1,11 @@
 import { items } from "./items";
 
+/*
+## Shuffle implementation
+Using Math.random() - 0.5 is fine for prototypes, but a senior would suggest Fisher–Yates for uniform shuffling.
+Comment: “This shuffle can bias order; if this were production, use Fisher–Yates.”
+*/
+
 function shuffle(array) {
   return [...array].sort(() => Math.random() - 0.5);
 }
