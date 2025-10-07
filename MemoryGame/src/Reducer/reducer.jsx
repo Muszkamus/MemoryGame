@@ -1,20 +1,29 @@
 import { items } from "./items";
 
-/*
-## Shuffle implementation
-Using Math.random() - 0.5 is fine for prototypes, but a senior would suggest Fisher–Yates for uniform shuffling.
-Comment: “This shuffle can bias order; if this were production, use Fisher–Yates.”
-*/
+// The Fisher-Yates algorithm
+const shuffle = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
 
-function shuffle(array) {
-  return [...array].sort(() => Math.random() - 0.5);
-}
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+};
+// Old shuffle
+// function shuffle(array) {
+//   return [...array].sort(() => Math.random() - 0.5);
+// }
 
 const initialState = {
   cards: shuffle(items),
   selected: [],
   count: 0, // number of moves (pairs attempted)
   correct: 0,
+  matchingPairs: items.length / 2,
+  finishedStatus: true,
+  playerName: "",
 };
 
 function reducer(state, action) {
@@ -59,6 +68,20 @@ function reducer(state, action) {
         correct: state.correct + 1,
         selected: [],
         count: state.count + 1,
+      };
+
+    case "FINISHEDGAME":
+      return { ...state, finishedStatus: true };
+
+    case "RESTARTGAME":
+      return {
+        ...state,
+        cards: shuffle(items),
+        selected: [],
+        count: 0, // number of moves (pairs attempted)
+        correct: 0,
+        finishedStatus: false,
+        playerName: "",
       };
 
     default:

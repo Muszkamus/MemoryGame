@@ -1,4 +1,17 @@
-function Game({ state, dispatch, name }) {
+import { useEffect, useState } from "react";
+
+import EndGame from "./EndGame";
+
+function Game({ state, dispatch, name, setName }) {
+  const [scoreAdded, setScoreAdded] = useState(false);
+
+  // Prevents too-many render issues
+  useEffect(() => {
+    if (state.correct === state.matchingPairs) {
+      dispatch({ type: "FINISHEDGAME" });
+    }
+  }, [dispatch, state.correct, state.matchingPairs]);
+
   function handleClick(id) {
     /*
 ## Game logic coupling
@@ -23,8 +36,8 @@ Example: instead of setTimeout in the component, dispatch an action like CHECK_M
     const newSelection = [...state.selected, card];
 
     if (newSelection.length === 2) {
-      // If first card’s id matches second card’s partner (isMatching)
-      if (newSelection[0].id === newSelection[1].isMatching) {
+      // If first card’s id matches second card’s partner (pairID)
+      if (newSelection[0].id === newSelection[1].pairID) {
         setTimeout(() => {
           dispatch({ type: "MATCHINGCHOICE" });
         }, 100);
@@ -35,29 +48,36 @@ Example: instead of setTimeout in the component, dispatch an action like CHECK_M
       }
     }
   }
+
   return (
     <div>
       <Dashboard state={state} name={name} />
-      <Scoreboard />
-      <GameBoard>
-        {state.cards.map((el) => (
-          <Square
-            key={el.id}
-            id={el.id}
-            handleClick={handleClick}
-            symbol={el.isFlipped || el.solved ? el.symbol : <p>?</p>}
+
+      {state.finishedStatus === true ? (
+        <>
+          <EndGame
+            setScoreAdded={setScoreAdded}
+            state={state}
+            name={name}
+            dispatch={dispatch}
+            setName={setName}
+            scoreAdded={scoreAdded}
           />
-        ))}
-      </GameBoard>
+        </>
+      ) : (
+        <GameBoard>
+          {state.cards.map((el) => (
+            <Square
+              key={el.id}
+              id={el.id}
+              handleClick={handleClick}
+              symbol={el.isFlipped || el.solved ? el.symbol : <p>?</p>}
+            />
+          ))}
+        </GameBoard>
+      )}
     </div>
   );
-}
-
-function Scoreboard() {
-  // TODO
-  // This will show up when the game is won, fetch data from local storage, with the button to submit score with name to localStorage.
-  // There will be button to remove the scores to clean up.
-  return <div></div>;
 }
 
 function Dashboard({ state, name }) {
@@ -65,7 +85,7 @@ function Dashboard({ state, name }) {
     <div className="flex justify-between mx-50 mt-2 font-bold ">
       <p className="">Player: {name}</p>
       <p className=" flex flex-col">
-        Moves: {state.count} | Matches: {state.correct}
+        count: {state.count} | Matches: {state.correct}
       </p>
     </div>
   );

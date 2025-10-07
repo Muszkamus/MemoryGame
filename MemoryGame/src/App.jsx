@@ -12,7 +12,12 @@ function App() {
       {name === "" ? (
         <StartMenu setName={setName} />
       ) : (
-        <Game state={state} dispatch={dispatch} name={name} />
+        <Game
+          state={state}
+          dispatch={dispatch}
+          name={name}
+          setName={setName}
+        ></Game>
       )}
     </div>
   );
