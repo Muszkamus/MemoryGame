@@ -1,39 +1,31 @@
-import { useLocalStorageState } from "./useLocalStorage";
+import { useLocalStorageState } from "../useLocalStorage";
 import ScoreBoard from "./ScoreBoard";
 
-function EndGame({
-  dispatch,
-  state,
-  name,
-  setName,
-  setScoreAdded,
-  scoreAdded,
-}) {
-  const { count } = state;
+function EndGame({ dispatch, state, setScoreAdded, scoreAdded }) {
+  const { count, playerName } = state;
   const scoreboardHistory = [];
   const [scoreboard, setScoreboard] = useLocalStorageState(
-    [],
-    scoreboardHistory
+    scoreboardHistory,
+    "scoreboard"
   );
 
   function addUserScore(e) {
+    if (scoreAdded) return;
     const uniqueID = new Date().getTime();
     e.preventDefault();
 
     const newUserScore = {
       id: uniqueID,
-      name,
+      playerName,
       count,
     };
 
     setScoreboard([...scoreboard, newUserScore]);
-    // Logic to add UserScore from reducer
     setScoreAdded(true);
   }
 
   function handleRestartGame() {
     dispatch({ type: "RESTARTGAME" });
-    setName("");
     setScoreAdded(false);
   }
 
@@ -42,8 +34,8 @@ function EndGame({
       <div className="flex justify-center">
         <div className="flex flex-col text-3xl mt-20">
           <p>
-            Congratulations {name}, You have finished the game in {state.count}{" "}
-            moves
+            Congratulations {state.playerName}, You have finished the game in{" "}
+            {state.count} moves
           </p>
           <button
             disabled={scoreAdded}
@@ -63,7 +55,6 @@ function EndGame({
       </div>
       <ScoreBoard
         state={state}
-        name={name}
         scoreboard={scoreboard}
         setScoreboard={setScoreboard}
       />

@@ -1,10 +1,10 @@
 import { items } from "./items";
+// Need to remove the import from there, and tie it to payload
 
 // The Fisher-Yates algorithm
 const shuffle = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-
     const temp = array[i];
     array[i] = array[j];
     array[j] = temp;
@@ -22,13 +22,14 @@ const initialState = {
   count: 0, // number of moves (pairs attempted)
   correct: 0,
   matchingPairs: items.length / 2,
-  finishedStatus: true,
   playerName: "",
+  status: "init",
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case "FLIPCARD":
+      if (state.selected.length >= 2) return state;
       return {
         ...state,
         // Flip the clicked card face-up
@@ -71,17 +72,14 @@ function reducer(state, action) {
       };
 
     case "FINISHEDGAME":
-      return { ...state, finishedStatus: true };
+      return { ...state, status: "finished" };
+
+    case "STARTGAME":
+      return { ...state, playerName: action.payload, status: "started" };
 
     case "RESTARTGAME":
       return {
-        ...state,
-        cards: shuffle(items),
-        selected: [],
-        count: 0, // number of moves (pairs attempted)
-        correct: 0,
-        finishedStatus: false,
-        playerName: "",
+        ...initialState,
       };
 
     default:

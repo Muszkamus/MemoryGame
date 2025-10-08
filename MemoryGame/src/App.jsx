@@ -1,26 +1,27 @@
 import { useReducer, useState } from "react";
-import { initialState, reducer } from "./Reducer/reducer";
-import Game from "./Game";
-import StartMenu from "./StartMenu";
+import { initialState, reducer } from "./reducer/reducer";
+import MainGame from "./game/MainGame";
+import StartMenu from "./game/StartMenu";
+import EndGame from "./game/EndGame";
 
-function App() {
-  const [name, setName] = useState("");
+export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { status } = state;
 
+  const [scoreAdded, setScoreAdded] = useState(false);
   return (
     <div>
-      {name === "" ? (
-        <StartMenu setName={setName} />
-      ) : (
-        <Game
+      {status === "init" && <StartMenu dispatch={dispatch} />}
+
+      {status === "started" && <MainGame state={state} dispatch={dispatch} />}
+      {status === "finished" && (
+        <EndGame
+          setScoreAdded={setScoreAdded}
           state={state}
           dispatch={dispatch}
-          name={name}
-          setName={setName}
-        ></Game>
+          scoreAdded={scoreAdded}
+        />
       )}
     </div>
   );
 }
-
-export default App;

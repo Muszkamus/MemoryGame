@@ -30,7 +30,7 @@ function ScoreHistory({ scoreboard, setScoreboard }) {
           key={score.id}
           className="flex flex-row gap-6 text-lg py-1 border-b border-gray-200"
         >
-          <div className="w-32 text-center">{score.name}</div>
+          <div className="w-32 text-center">{score.playerName}</div>
           <div className="w-24 text-center">{score.count}</div>
           <div className="w-40 text-center">{date}</div>
           <div className="w-20 text-center">

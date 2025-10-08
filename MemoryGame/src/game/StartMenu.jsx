@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-function StartMenu({ setName }) {
+function StartMenu({ dispatch }) {
   const [value, setValue] = useState("");
 
   function handleChange(e) {
     e.preventDefault();
-    setName(value);
+    dispatch({ type: "STARTGAME", payload: value });
   }
 
   return (
